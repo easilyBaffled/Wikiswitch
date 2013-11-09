@@ -1,0 +1,49 @@
+<html>
+  <script>
+var current; //current url 
+var newurl; //new url
+var simpleString = 'http://simple.wikipedia.org/wiki/'
+var regularString = 'http://en.wikipedia.org/wiki/'
+var topic;
+
+function checkForValidUrl(tabId, changeInfo, tab) {
+	if (tab.url.indexOf("wikipedia.org") > -1) {
+		chrome.pageAction.show(tabId);
+	}
+};
+
+// Listen for any changes to the URL of any tab.
+chrome.tabs.onUpdated.addListener(checkForValidUrl);
+
+chrome.pageAction.onClicked.addListener(function(tab) { //checks which wikipage we are on and adjusts accordingly
+	chrome.tabs.getSelected(null,function(tab) {
+		current = tab.url;
+		});
+		var end = current.indexOf("/wiki/");
+		topic = current.substring((end+6));
+	if(current.indexOf("simple.wikipedia.org") > -1){ //then current is simpleWiki
+		newurl = regularString+topic;
+		//change icon
+	}
+	else{
+		
+		newurl = simpleString+topic;
+		//change icon
+	}
+	chrome.tabs.getCurrent(function (tab) {
+		chrome.tabs.update(tab.id, {url: newurl});
+		});
+});
+
+function updateUrl(tab){
+  if(tab.url.match(sciencedirectold))
+  {
+      var newurl = tab.url.replace(sciencedirectold, sciencedirectnew);
+      chrome.tabs.update(tab.id, {url: newurl});
+  }
+}
+
+chrome.browserAction.onClicked.addListener(function(tab) {updateUrl(tab);});
+
+  </script>
+</html>
